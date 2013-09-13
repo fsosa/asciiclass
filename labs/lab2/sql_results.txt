@@ -1,0 +1,26 @@
+1. Find the number of deleted messages in the dataset.
+sqlite> SELECT COUNT(*) FROM tweets WHERE is_delete=1
+	1554
+
+2. Find the number of tweets that are replies to another tweet in this dataset.
+sqlite> SELECT COUNT(*) FROM tweets INNER JOIN tweets as b WHERE tweets.reply_to = b.id;
+	17
+
+3. Find the five uids that have tweeted the most.
+
+sqlite> SELECT uid, COUNT(uid) FROM tweets WHERE tweets.is_delete = 0 GROUP BY uid ORDER BY COUNT(uid) desc LIMIT 5;
+	1269521828|5
+	392695315|4
+	424808364|3
+	1706901902|3
+	23991910|2
+
+3. Find the names of the top five places by number of tweets. (Tweets may have a "place" attribute that describes where the tweet is from).
+
+sqlite> SELECT places.name, COUNT(places.tid) FROM places, tweets WHERE places.tid = tweets.id GROUP BY places.name ORDER BY COUNT(places.tid) DESC LIMIT 5;
+	Türkiye|4
+	Gambir|3
+	Bandar Seremban|2
+	East Borneo|2
+	Florida|2
+

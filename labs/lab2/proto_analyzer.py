@@ -21,6 +21,8 @@ def find_num_retweets(tweets):
 	# Loop through tweets and check if reply_to id in the list of ids
 	num_replies = 0
 	for tweet in tweets.tweets:
+		if tweet.insert.HasField("reply_to") == False:
+			continue
 		if tweet.insert.reply_to in tweet_ids:
 			num_replies += 1
 	
@@ -69,7 +71,6 @@ def find_top_five_places(tweets):
 f = open('twitter.pb', "rb")
 tweets = twitter_pb2.Tweets()
 tweets.ParseFromString(f.read())
-print "Total number of tweets: " + str(len(tweets.tweets))
 f.close()
 
 find_deleted_tweets(tweets)

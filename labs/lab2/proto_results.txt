@@ -1,0 +1,4 @@
+Number of deleted tweets: 1554
+Number of tweets in reply: 17
+Top five tweeters: [1269521828L, 392695315L, 424808364L, 1706901902L, 1471774728L]
+Top five places: [u'T\xfcrkiye', u'Gambir', u'Mississippi', u'Malalayang', u'Nongsa']
