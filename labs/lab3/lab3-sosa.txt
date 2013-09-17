@@ -1,0 +1,6 @@
+Fidel Sosa - 6.885 - Lab 3
+
+Wrangler Questions
+=====
+1. See synwrangler.py
+2. Assuming that we define words to be unique if they have different meanings, there are 145,105 unique words.  
