@@ -5,8 +5,7 @@ Wrangler Questions
 1. See synwrangler.py
 2. Using the following command, we isolate every word, sort them, and then count the number of unique occurrences:
 > cut -d "," -f 1 synout.csv | sort | uniq | wc -l
-118,295 (unique words)
-
+118,294 unique words
 
 1. Brazil - 5, Italy - 4, Germany - 3, Argentina - 2, Uruguay - 2, France - 1, England - 1, Spain - 1
 NOTE: cupout.csv contains all results direct from the DataWrangler website. cupwrangler.py contains the generated Python script, but while it works on the site, it does not appear to run on the test set direct from Python. 
