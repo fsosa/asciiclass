@@ -3,6 +3,7 @@ Fidel Sosa - 6.885 - Lab 3
 Wrangler Questions
 =====
 1. See synwrangler.py
+
 2. Using the following command, we isolate every word, sort them, and then count the number of unique occurrences:
 > cut -d "," -f 1 synout.csv | sort | uniq | wc -l
 118,294 unique words
@@ -10,4 +11,14 @@ Wrangler Questions
 1. Brazil - 5, Italy - 4, Germany - 3, Argentina - 2, Uruguay - 2, France - 1, England - 1, Spain - 1
 NOTE: cupout.csv contains all results direct from the DataWrangler website. cupwrangler.py contains the generated Python script, but while it works on the site, it does not appear to run on the test set direct from Python. 
 
- 
+Command Line Questions
+=====
+1. See awkscripts.txt. (NOTE: The world cup script was run on cleanedcup.txt, which was the output of the clean command in the lab)
+
+2.The main benefit of Data Wrangler is that it provides a simple user interface which allows non-technical users to clean data, while a certain level of technical proficiency is assumed with sed/awk. Data Wrangler's suggestions and automatic cleaning steps are useful on certain sets of data, particularly those that are somewhat well structured. Tools like awk/sed, however, provide a much higher level of control over the data through the use of regular expressions and the ability to write custom logic. From my experience, it was much simpler to write the command line scripts to clean the data than using Data Wrangler. This was mostly due to the shortcomings of the Data Wrangler tool; namely that the site was prone to crashes and often became unresponsive. 
+
+3. The ability to enter in your own regular expressions would make using Data Wrangler easier, especially considering that DW surfaces that information to the user at times. Although not an operation, the best addition to DW would have been a description of the operations as the purpose of operations was often found through a significant amount of trial and error. 
+
+Feedback
+=====
+ The lab was not too difficult. The most difficult and time-consuming part of the lab was using Data Wrangler due to how buggy it was. I really enjoyed learning and using sed/awk. 
