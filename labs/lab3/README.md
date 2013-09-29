@@ -4,6 +4,8 @@
 
 *Due: Tuesday, September 24th, 12:59 PM (just before class)*
 
+*Update, September 19th: Removed "However, there is no explicit deliverable in this lab" statement from sed/awk section, since we want you to turn in your scripts.*
+
 In this lab, you will use various types of tools -- from command line tools like `sed` and `awk` to high-level tools like Data Wrangler -- to perform data parsing and extraction from data encoded into a text file.  The goal of this lab is simply to gain experience with these tools and compare and contrast their usage.
 
 
@@ -100,8 +102,8 @@ The set of three UNIX tools, `sed`, `awk`, and `grep`, can be very useful for qu
 (and have been around since the inception of UNIX). 
 In conjunction with other unix utilities like `sort`, `uniq`, `tail`, `head`, etc., you can accomplish many simple data parsing and cleaning 
 tasks with these tools. 
-You are encouraged to play with these tools and familiarize yourselves with the basic usage of these tools. However, there is no explicit 
-deliverable in this lab.
+You are encouraged to play with these tools and familiarize yourselves with the basic usage of these tools.
+
 
 As an example, the following sequence of commands can be used to answer the third question from the [lab 2](../lab2/) ("Find the five uids that have tweeted the most").
 
@@ -156,7 +158,7 @@ A few examples to give you a flavor of the tools and what one can do with them.
 1. Perform the equivalent of _wrap_ on `labor.csv` (i.e., merge consecutive groups of lines referring to the same record)
 
     	cat labor.csv | awk '/^Series Id:/ {print combined; combined = $0} 
-                            !/^Series Id:/ {combined = combined", "$0;} '
+                            !/^Series Id:/ {combined = combined", "$0;}
     	                    END {print combined}'
 
 1. On  `crime-clean.txt`, the following command does a _fill_ (first row of output: "Alabama, 2004, 4029.3".
