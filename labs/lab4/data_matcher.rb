@@ -2,8 +2,7 @@
 require 'rubygems'
 require 'json'
 require 'csv'
-
-# NOTE: Requires Ruby 1.9.2+ or the Ruby JSON gem ('gem install json')
+require 'levenshtein'
 
 def importJSON (filename) 
 	raw_data = File.read(filename) 
@@ -12,7 +11,7 @@ def importJSON (filename)
 	return parsed
 end
 
-def importCSVasHash (filename)
+def importCSV (filename)
 	csv_pairs = CSV.read(filename)
 	pair_hash = {}
 	
@@ -46,7 +45,7 @@ end
 
 def createBucket (entry_list, key_name)
 	bucket = {}
-	# for each item, check if key exists, if so add to list under that key
+	
 	entry_list.each do |entry|
 		if !entry[key_name].nil?
 			key = entry[key_name]
@@ -73,33 +72,45 @@ def phones_match? (entry1, entry2)
 		return false
 	end
 	
-	#NOTE: OMG ARE YOU SERIOUS FIDEL
-	if phone_1 == phone_2
-		return phone_1 == phone_2	
+	return phone_1 == phone_2	
+end
+
+# Computes the Levenshtein distance between the addresses of two entries
+def leven_dist (entry1, entry2, key)
+	first = entry1[key]
+	second = entry2[key]
+	
+	if first.empty? ||  second.empty? || first.nil? || second.nil?
+		return 10000
 	end
+	
+	# Get rid of any junk characters
+	first = first.gsub(/[!?:,&\.\'\-()\s]/, "").downcase
+	second = second.gsub(/[!?:,&\.\'\-()\s]/, "").downcase
+
+	return Levenshtein.distance(first, second)
 end
 
-def normaliz_addr (addr)
+def key_match? (entry1, entry2, key)
+	val1 = entry1[key]
+	val2 = entry2[key]
 	
-end
+	# Get rid of any junk characters
+	val1 = val1.gsub(/[!?:,&\.\'\-()\s]/, "").downcase
+	val2 = val2.gsub(/[!?:,&\.\'\-()\s]/, "").downcase
 
-def addr_match? (entry1, entry2)
-	addr1 = entry1["street_address"]
-	addr2 = entry2["street_address"]
-	
-	if addr1.nil? || addr2.nil? || addr1.empty? || addr2.empty?
+	if val1.nil? || val2.nil? || val1.empty? || val2.empty?
 		return false
 	end
 
-	return addr1 == addr2
+	return val1 == val2
 
 end
 
 # Approach:
 # 1. Filter down entries to compare by creating a hash of postal codes to entries with the same code
-# 2. Compare entries first by phone numbers
-# 	If no phone number, compare by normalized name
-#		If no match, compare by Levenshtein distance according to some threshold
+# 2. Compare entries first by name 
+#			Then by phone number; Finally by levenshtein distance 
 
 def findMatches (file_1, file_2)
 	bucket_key_name = "postal_code"
@@ -116,7 +127,6 @@ def findMatches (file_1, file_2)
 
 	# Keep track of matched entries so we don't repeat matches
 	matched = []
-
 
 	# Find the matches!
 	all_keys.each do |key|
@@ -137,41 +147,71 @@ def findMatches (file_1, file_2)
 			sub_bucket_2 += second_bucket[key]
 		end
 
-		# Now SEARCH!
 		sub_bucket_1.each do |entry_1|
 			sub_bucket_2.each do |entry_2|
-				# Compare phone numbers first
-				if phones_match?(entry_1, entry_2) && !matched.include?(entry_1) && !matched.include?(entry_2)
-					final_matches << [entry_1["id"], entry_2["id"]]
-					matched << entry_1
-					matched << entry_2
-					break
-				end
+					first_id = entry_1["id"]
+					second_id = entry_2["id"]
 
-				if addr_match?(entry_1, entry_2) && !matched.include?(entry_1) && !matched.include?(entry_2)
-					final_matches << [entry_1["id"], entry_2["id"]]
-					matched << entry_1
-					matched << entry_2
-					break		
-				end
+					if matched.include?(first_id) && matched.include?(second_id)
+						break
+					end
 
+					# Perform these comparisons separately to avoid the costly Levenshtein calculation			
+		
+					# Compare names directly
+					if key_match?(entry_1, entry_2, "name") 
+						final_matches << [first_id, second_id]
+						matched << first_id
+						matched << second_id
+						break		
+					end
+
+					# Then normalized phone numbers
+					if phones_match?(entry_1, entry_2) 
+						final_matches << [first_id, second_id]
+						matched << first_id
+						matched << second_id
+						break
+					end
+
+
+					if leven_dist(entry_1, entry_2, 'name') < 3  
+						final_matches << [first_id, second_id]
+						matched << first_id
+						matched << second_id	
+						break	
+					end
 			end
-
 		end
 	end
 
 	return final_matches
 end
 
-if ARGV.length != 3 
+if ARGV.length < 2
 	puts "NOTE: Requires Ruby 1.9.2+ or the Ruby JSON gem ('gem install json')"
-	puts "USAGE: #{$0} file1.json file2.json"
+	puts "Also requires the levenshtein-ffi gem ('gem install levenshtein-ffi')"
+	puts "USAGE: #{$0} file1.json file2.json {optional: truth.csv}"
 end
 
 if ARGV.length == 3
+	begin_time = Time.now
 	results = findMatches ARGV[0], ARGV[1]
-	truth = importCSVasHash ARGV[2]
+	truth = importCSV ARGV[2]
 	scoreMatches(results, truth)
+	end_time = Time.now
+	elapsed = (end_time - begin_time) * 1000
+	puts "Time elapsed #{elapsed} ms"
+end
+
+if ARGV.length == 2
+	begin_time = Time.now
+	results = findMatches ARGV[0], ARGV[1]
+	CSV.open("matches_test.csv", "w") do |csv|
+		results.each do |pair|
+			csv << pair	
+		end
+	end
 end
 
 
