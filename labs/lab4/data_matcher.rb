@@ -64,6 +64,7 @@ def normalized_phone (phone)
 	end
 end
 
+
 def phones_match? (entry1, entry2)
 	phone_1 = normalized_phone(entry1["phone"])
 	phone_2 = normalized_phone(entry2["phone"])
@@ -72,16 +73,33 @@ def phones_match? (entry1, entry2)
 		return false
 	end
 	
+	#NOTE: OMG ARE YOU SERIOUS FIDEL
 	if phone_1 == phone_2
 		return phone_1 == phone_2	
 	end
+end
+
+def normaliz_addr (addr)
+	
+end
+
+def addr_match? (entry1, entry2)
+	addr1 = entry1["street_address"]
+	addr2 = entry2["street_address"]
+	
+	if addr1.nil? || addr2.nil? || addr1.empty? || addr2.empty?
+		return false
+	end
+
+	return addr1 == addr2
+
 end
 
 # Approach:
 # 1. Filter down entries to compare by creating a hash of postal codes to entries with the same code
 # 2. Compare entries first by phone numbers
 # 	If no phone number, compare by normalized name
-#	If no match, compare by Levenshtein distance according to some threshold
+#		If no match, compare by Levenshtein distance according to some threshold
 
 def findMatches (file_1, file_2)
 	bucket_key_name = "postal_code"
@@ -95,7 +113,10 @@ def findMatches (file_1, file_2)
 	all_keys = first_bucket.keys + second_bucket.keys
 
 	final_matches = []
+
+	# Keep track of matched entries so we don't repeat matches
 	matched = []
+
 
 	# Find the matches!
 	all_keys.each do |key|
@@ -124,7 +145,16 @@ def findMatches (file_1, file_2)
 					final_matches << [entry_1["id"], entry_2["id"]]
 					matched << entry_1
 					matched << entry_2
+					break
 				end
+
+				if addr_match?(entry_1, entry_2) && !matched.include?(entry_1) && !matched.include?(entry_2)
+					final_matches << [entry_1["id"], entry_2["id"]]
+					matched << entry_1
+					matched << entry_2
+					break		
+				end
+
 			end
 
 		end
