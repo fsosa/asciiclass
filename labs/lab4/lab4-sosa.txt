@@ -1,0 +1,9 @@
+Fidel Sosa - Lab4 Writeup <sosaf@mit.edu>
+
+1. My original ER technique was to compare normalized phone numbers directly, then string equality between addresses, and finally the Levenshtein distance between addresses. However, I quickly realized that the addresses were more costly and difficult to compare than the generally shorter names, which also had less variance between possible names. In the end, I ended up comparing a semi-normalized name, then the phone number, and finally calculating the Levenshtein distance between names and choosing those below a certain threshold (e.g. 2). The largest contributor to a change in f-score was using names instead of addresses. The Levenshtein distance actually made a rather small improvement to the score. 
+
+2. The most important features that powered my technique were the "postal_code", "name", and "phone" featuress. In particular, I used the name and phone features to actually compare the data. I used the postal code feature to segment the data to avoid comparing every single pair. 
+
+3. I avoided the pairwise comparison of all venues across both datasets by segmenting the data into buckets, where each bucket contained venues that shared the same postal code. Therefore, I only had to compare elements in the two datasets that shared the same postal code, and thus were in the same keyed bucket. 
+
+ 

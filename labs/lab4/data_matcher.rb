@@ -174,7 +174,7 @@ def findMatches (file_1, file_2)
 						break
 					end
 
-
+					# Finally Leven distance
 					if leven_dist(entry_1, entry_2, 'name') < 3  
 						final_matches << [first_id, second_id]
 						matched << first_id
@@ -205,7 +205,6 @@ if ARGV.length == 3
 end
 
 if ARGV.length == 2
-	begin_time = Time.now
 	results = findMatches ARGV[0], ARGV[1]
 	CSV.open("matches_test.csv", "w") do |csv|
 		results.each do |pair|
