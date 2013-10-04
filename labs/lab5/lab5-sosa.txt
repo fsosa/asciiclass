@@ -1,0 +1,61 @@
+Fidel Sosa - Lab 5
+
+Top 10 TD-IDF terms for:
+
+Kenneth Lay:
+{"tf-idf": 89.694587717054517, "word": "enron"}
+{"tf-idf": 92.534097109822724, "word": "committee"}
+{"tf-idf": 97.651056108785767, "word": "company"}
+{"tf-idf": 98.358737536249592, "word": "cindy"}
+{"tf-idf": 99.093016426443484, "word": "visions"}
+{"tf-idf": 99.271151226487788, "word": "continue"}
+{"tf-idf": 114.43536799419108, "word": "enron's"}
+{"tf-idf": 114.74647821014416, "word": "graduates"}
+{"tf-idf": 144.48629129351923, "word": "kenneth"}
+{"tf-idf": 285.6340723157187, "word": "program"}
+
+Jeffrey Skilling:
+{"tf-idf": 166.77389832964872, "word": "erica"}
+{"tf-idf": 169.52258790968096, "word": "macerich"}
+{"tf-idf": 186.83641407617981, "word": "joannie"}
+{"tf-idf": 188.35843101075665, "word": "trakya"}
+{"tf-idf": 192.0236340850239, "word": "skilling"}
+{"tf-idf": 205.97626793736612, "word": "globe"}
+{"tf-idf": 210.88406255374815, "word": "turkish"}
+{"tf-idf": 234.73987637817885, "word": "murdock"}
+{"tf-idf": 250.29976390649597, "word": "sherri"}
+{"tf-idf": 435.19809080025402, "word": "jeff"}
+
+Andrew Fastow:
+{"tf-idf": 31.713085851299102, "word": "andy"}
+{"tf-idf": 32.142725677755273, "word": "approval"}
+{"tf-idf": 32.226707598508391, "word": "victor"}
+{"tf-idf": 33.2284488814241, "word": "creditex"}
+{"tf-idf": 37.99381553560832, "word": "sunil"}
+{"tf-idf": 40.258194861851543, "word": "highstar"}
+{"tf-idf": 42.935667241465133, "word": "transaction"}
+{"tf-idf": 99.699551906090051, "word": "vagner"}
+{"tf-idf": 149.54932785913508, "word": "asep"}
+{"tf-idf": 179.65704590017634, "word": "petrobras"}
+
+Rebecca Mark-Jusbache:
+Was only able to find references to her name as the word; no emails found
+
+Stephen Cooper
+No emails found
+
+====
+
+Approach:
+I computed TD-IDF on the whole corpus in two steps. First I computed the per-term idfs for each term by computing number of emails containing each term and using the provided overall number of emails to compute the per-term idf. This was done by simply outputting {term, 1} pairs for each term in an email in the map-phase and calculating the IDF in the reduce phase. 
+
+The second step was to compute the overall td-idf for each sender. In the map phase, we simply outputted a (sender, term}, 1) to count the term frequencies per sender. In the reduce phase, we first loaded up the overall IDFs per term and multipled that against the sender's TFs which was outputted as a (sender, {word, td-idf}) pair. 
+
+====
+
+A way we could use EMR to run page rank on the graph would be to first compute the number of outlinks from a person. We would use EMR to output (sender, 1) pairs and reduce them to get the outlinks from a sender. Similarly, we could do the same to see how many inlinks there are to a person by outputting (to, 1) pairs. Using this information, we would then be able to calculate PageRank. Keep in mind that the outlinks and inlinks should be unique (i.e. one link per from->to pairs). 
+ 
+ 
+ 
+ 
+ 

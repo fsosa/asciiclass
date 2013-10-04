@@ -4,7 +4,7 @@ import json
 import StringIO
 from mrjob.protocol import JSONValueProtocol, JSONProtocol
 from mrjob.job import MRJob
-from mrjob.emr import 
+from mrjob.emr import EMRJobRunner 
 from term_tools import get_terms
 
 
@@ -21,10 +21,11 @@ class MRSenderTF(MRJob):
 		# We want to create an overall dictionary of word, idf pairs 
 		self.per_word_idfs =  {}
 	
-		# Create the S3 connection to get the list of intermediate idf parts	
-		conn = S3Connection()
-		bucket = conn.get_bucket('6885public')
-		idf_parts = bucket.list('fsosa/term-idfs/part') # Ignore that _SUCCESS file 
+		# Get the list of keys so that we can get the idf parts
+		access_key ='AKIAJFDTPC4XX2LVETGA' 
+		secret_key ='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'
+		emr = EMRJobRunner(aws_access_key_id=access_key, aws_secret_access_key=secret_key)
+		idf_parts = emr.get_s3_keys("s3://6885public/fsosa/term-idfs/")
 
 		# Iterate over all the parts to build the entire word dictionary
 		for part in idf_parts:
