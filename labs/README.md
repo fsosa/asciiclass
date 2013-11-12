@@ -24,3 +24,11 @@ Introduction to Hadoop/EMR
 ### [Lab 6](./lab6)
 
 Introduction to Iterative MapReduce (Spark)
+
+### [Lab 7](./lab7)
+
+Introduction to Vertex-centric Graph computation (Giraph)
+
+### [Lab 8](./lab8)
+
+Introduction to Visualization
